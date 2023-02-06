@@ -3,11 +3,18 @@
 
 #include"LIB/STD_TYPES.h"
 
-#include"Services_Priv.h"
-#include"Services_Interface.h"
+#include"MailBox_Priv.h"
+#include"MailBox_Interface.h"
 
 
-
+/***********************************************************************************************************************************
+*Description: this function is used to create a mail-box data size in run-time 
+*Scope		: public
+*@pram		: Mailbox	--> Address of Mailbox created 	
+*@pram		: Size 		--> Size of bytes needed to hold data 
+*
+*@return		: MBS enum value either holding (successfull) location Reserved OR  ERROR could not Reserve location (Not_successfull)	
+************************************************************************************************************************************/
 MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 {
 		u8 successfull_OR_NOT = successfull;
@@ -33,6 +40,16 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 	return successfull_OR_NOT;
 }
 
+
+/***********************************************************************************************************************************
+*Description: this function is used to Send Massege to mail-box in Run-Time
+*Scope		: public
+*@pram		: Mailbox	--> Address of Mailbox created 			
+*@pram		: DataType 	--> void pointer to pointer locating data Address	
+*@pram		: Size 		--> Size of bytes needed to hold data  OR Size of Massege - if data max size is 8 bytes more will overflow
+*
+*@return		: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
+************************************************************************************************************************************/
 SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 {
 		u8 ReturnState;  // 0(Fail)   or   1(Success)
@@ -100,7 +117,13 @@ SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 	return ReturnState;
 }
 
-
+/***********************************************************************************************************************************
+*Description: this function is used to Receive Massege from mail-box in Run-Time
+*Scope		: public
+*@pram		: Mailbox	--> Address of Mailbox created
+*
+*@return		: DataType --> void pointer holding Address of Massege Data (trying to cast the recive pointer to more data bytes than sended value can result in garbage Value)
+************************************************************************************************************************************/
 DataType OS_VPMailbox_Receive(Mailbox *M)
 {
 	DataType Return;

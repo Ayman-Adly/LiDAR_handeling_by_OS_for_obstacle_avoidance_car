@@ -53,7 +53,7 @@ typedef void* DataType;
 *@pram		: Mailbox	--> Address of Mailbox created 	
 *@pram		: Size 		--> Size of bytes needed to hold data 
 *
-*@return		: u8 value either holding u8 number (1) location Reserved OR  ERROR could not Reserve location (0)	
+*@return		: MBS enum value either holding (successfull) location Reserved OR  ERROR could not Reserve location (Not_successfull)	
 ************************************************************************************************************************************/	
 MBS OS_enuMailbox_Create(Mailbox *M,Size data);
 
@@ -65,7 +65,7 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size data);
 *@pram		: DataType 	--> void pointer to pointer locating data Address	
 *@pram		: Size 		--> Size of bytes needed to hold data  OR Size of Massege - if data max size is 8 bytes more will overflow
 *
-*@return		: u8 value either holding (0) could not Send OR  (1) Send Done 
+*@return		: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
 ************************************************************************************************************************************/
 SMS OS_enuMailbox_Send( Mailbox *M, void* *copy_of_data_type ,Size data);
 
