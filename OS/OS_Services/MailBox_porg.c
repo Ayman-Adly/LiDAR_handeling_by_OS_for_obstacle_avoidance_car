@@ -121,28 +121,68 @@ SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 *Description: this function is used to Receive Massege from mail-box in Run-Time
 *Scope		: public
 *@pram		: Mailbox	--> Address of Mailbox created
+*@pram		: DataType 	--> void pointer to pointer locating Address to Put Data into	
+*@pram		: Size 		--> Size of bytes needed to hold data  OR Size of Massege - note data max size is 8 bytes more will overflow
 *
-*@return		: DataType --> void pointer holding Address of Massege Data (trying to cast the recive pointer to more data bytes than sended value can result in garbage Value)
+*@return	: void 
 ************************************************************************************************************************************/
-DataType OS_VPMailbox_Receive(Mailbox *M)
+void OS_VidMailbox_Receive(Mailbox *M,void**copy_of_data_type,Size data)
 {
-	DataType Return;
+	
 		if(M->Mailbox_Send_flag == empty) 
 		{
 			if(M->Mailbox_SBF==full)
 			{
 				M->Mailbox_Receive_flag=full;
-				Return=M->Data[full];
+				
+				if(data > M->Mailbox_DataSize)
+				{
+				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+				}
+				if(data <= One_byte)
+				{
+					*(u8*)copy_of_data_type=*(u8*)M->Data[full];
+				}
+				else if(data <= two_bytes)
+				{
+					*(u16*)copy_of_data_type=*(u16*)M->Data[full];
+				}
+				else if(data>two_bytes&&data<=Four_bytes)
+				{
+					*(u32*)copy_of_data_type=*(u32*)M->Data[full];
+				}
+				else 
+				{
+					*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+				}
 				M->Mailbox_Receive_flag=empty;
 				M->Mailbox_SBF=empty;
 			}
 			else
 			{
 				M->Mailbox_Receive_flag=full;
-				Return=M->Data[empty];
+				if(data > M->Mailbox_DataSize)
+				{
+				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+				}
+				if(data <= One_byte)
+				{
+					*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
+				}
+				else if(data <= two_bytes)
+				{
+					*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
+				}
+				else if(data>two_bytes&&data<=Four_bytes)
+				{
+					*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
+				}
+				else 
+				{
+					*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+				}
 				M->Mailbox_Receive_flag=empty; // to test functionality
 			}
 		}
 		
-		return Return;
 }
