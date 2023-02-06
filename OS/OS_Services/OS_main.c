@@ -7,7 +7,7 @@
 
 int main(void)
 {
-	u15 p = 1000;
+	u16 p = 1000;
 	u8 sizestate;
 	u8 mailbox_status=0,status=0;
 	u16 *ptr;
