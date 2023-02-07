@@ -34,8 +34,22 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 		else
 		{
 			 M->Mailbox_DataSize=size;
-			*M->Data[empty]=0;//initilaze value to zero
-			*M->Data[full]=0;//initilaze value to zero
+			if(size <= One_byte)
+			{
+				*(u8*)M->Data[empty]=0;
+			}
+			else if(size <= two_bytes)
+			{
+				*(u16*)M->Data[empty]=0;
+			}
+			else if(size > two_bytes&&size <= Four_bytes)
+			{
+				*(u32*)M->Data[empty]=0;
+			}
+			else 
+			{
+				*(f64*)M->Data[empty]=0;
+			}
 		}
 	return successfull_OR_NOT;
 }
