@@ -67,7 +67,7 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size data);
 *
 *@return	: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
 ************************************************************************************************************************************/
-SMS OS_enuMailbox_Send( Mailbox *M, void* *PointerToDataSended ,Size data);
+SMS OS_enuMailbox_Send( Mailbox *M, void *PointerToDataSended ,Size data);
 
 
 /***********************************************************************************************************************************
@@ -79,6 +79,6 @@ SMS OS_enuMailbox_Send( Mailbox *M, void* *PointerToDataSended ,Size data);
 *
 *@return	: void 
 ************************************************************************************************************************************/
-void OS_VidMailbox_Receive( Mailbox *M,void* *PointerToDataRecived,Size data);
+void OS_VidMailbox_Receive( Mailbox *M,void *PointerToDataRecived,Size data);
 
 #endif

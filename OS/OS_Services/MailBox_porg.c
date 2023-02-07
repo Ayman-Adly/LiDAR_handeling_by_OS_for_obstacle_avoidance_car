@@ -59,12 +59,12 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 *Description: this function is used to Send Massege to mail-box in Run-Time
 *Scope		: public
 *@pram		: Mailbox	--> Address of Mailbox created 			
-*@pram		: DataType 	--> void pointer to pointer locating data Address	
+*@pram		: DataType 	--> void  pointer locating data Address	
 *@pram		: Size 		--> Size of bytes needed to hold data  OR Size of Massege - if data max size is 8 bytes more will overflow
 *
 *@return		: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
 ************************************************************************************************************************************/
-SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
+SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 {
 		u8 ReturnState;  // 0(Fail)   or   1(Success)
 		if(M->Mailbox_Send_flag == full) 
@@ -79,23 +79,42 @@ SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 				M->Mailbox_Send_flag=full;
 				if(data > M->Mailbox_DataSize)
 				{
-				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+					//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+					if(M->Mailbox_DataSize <= One_byte)
+					{
+						*(u8*)M->Data[empty]=*(u8*)copy_of_data_type;
+					}
+					else if(M->Mailbox_DataSize <= two_bytes)
+					{
+						*(u16*)M->Data[empty]=*(u16*)copy_of_data_type;
+					}
+					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
+					{
+						*(u32*)M->Data[empty]=*(u32*)copy_of_data_type;
+					}
+					else 
+					{
+						*(f64*)M->Data[empty]=*(f64*)copy_of_data_type;
+					}
 				}
-				if(data <= One_byte)
+				else
 				{
-					*(u8*)M->Data[empty]=*(u8*)copy_of_data_type;
-				}
-				else if(data <= two_bytes)
-				{
-					*(u16*)M->Data[empty]=*(u16*)copy_of_data_type;
-				}
-				else if(data>two_bytes&&data<=Four_bytes)
-				{
-					*(u32*)M->Data[empty]=*(u32*)copy_of_data_type;
-				}
-				else 
-				{
-					*(f64*)M->Data[empty]=*(f64*)copy_of_data_type;
+					if(data <= One_byte)
+					{
+						*(u8*)M->Data[empty]=*(u8*)copy_of_data_type;
+					}
+					else if(data <= two_bytes)
+					{
+						*(u16*)M->Data[empty]=*(u16*)copy_of_data_type;
+					}
+					else if(data>two_bytes&&data<=Four_bytes)
+					{
+						*(u32*)M->Data[empty]=*(u32*)copy_of_data_type;
+					}
+					else 
+					{
+						*(f64*)M->Data[empty]=*(f64*)copy_of_data_type;
+					}
 				}
 				M->Mailbox_Send_flag=empty;
 				ReturnState =Success;
@@ -105,23 +124,42 @@ SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 				M->Mailbox_Send_flag=full;
 				if(data > M->Mailbox_DataSize)
 				{
-				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+				//warning Massege	that i'll only save on Mailbox Size and data will overflow
+					if(M->Mailbox_DataSize <= One_byte)
+					{
+						*(u8*)M->Data[full]=*(u8*)copy_of_data_type;
+					}
+					else if(M->Mailbox_DataSize <= two_bytes)
+					{
+						*(u16*)M->Data[full]=*(u16*)copy_of_data_type;
+					}
+					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
+					{
+						*(u32*)M->Data[full]=*(u32*)copy_of_data_type;
+					}
+					else 
+					{
+						*(f64*)M->Data[full]=*(f64*)copy_of_data_type;
+					}				
 				}
-				if(data <= One_byte)
+				else
 				{
-					*(u8*)M->Data[full]=*(u8*)copy_of_data_type;
-				}
-				else if(data <= two_bytes)
-				{
-					*(u16*)M->Data[full]=*(u16*)copy_of_data_type;
-				}
-				else if(data>two_bytes&&data<=Four_bytes)
-				{
-					*(u32*)M->Data[full]=*(u32*)copy_of_data_type;
-				}
-				else 
-				{
-					*(f64*)M->Data[full]=*(f64*)copy_of_data_type;
+					if(data <= One_byte)
+					{
+						*(u8*)M->Data[full]=*(u8*)copy_of_data_type;
+					}
+					else if(data <= two_bytes)
+					{
+						*(u16*)M->Data[full]=*(u16*)copy_of_data_type;
+					}
+					else if(data>two_bytes&&data<=Four_bytes)
+					{
+						*(u32*)M->Data[full]=*(u32*)copy_of_data_type;
+					}
+					else 
+					{
+						*(f64*)M->Data[full]=*(f64*)copy_of_data_type;
+					}
 				}
 				M->Mailbox_SBF=full;
 				M->Mailbox_Send_flag=empty;
@@ -135,12 +173,12 @@ SMS OS_enuMailbox_Send(Mailbox *M,void**copy_of_data_type,Size data)
 *Description: this function is used to Receive Massege from mail-box in Run-Time
 *Scope		: public
 *@pram		: Mailbox	--> Address of Mailbox created
-*@pram		: DataType 	--> void pointer to pointer locating Address to Put Data into	
+*@pram		: DataType 	--> void pointer locating Address to Put Data into	
 *@pram		: Size 		--> Size of bytes needed to hold data  OR Size of Massege - note data max size is 8 bytes more will overflow
 *
 *@return	: void 
 ************************************************************************************************************************************/
-void OS_VidMailbox_Receive(Mailbox *M,void**copy_of_data_type,Size data)
+void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 {
 	
 		if(M->Mailbox_Send_flag == empty) 
@@ -151,23 +189,42 @@ void OS_VidMailbox_Receive(Mailbox *M,void**copy_of_data_type,Size data)
 				
 				if(data > M->Mailbox_DataSize)
 				{
-				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+					//warning Massege	that i'll only save on Mailbox Size and data will overflow
+					if(M->Mailbox_DataSize <= One_byte)
+					{
+						*(u8*)copy_of_data_type=*(u8*)M->Data[full];
+					}
+					else if(M->Mailbox_DataSize <= two_bytes)
+					{
+						*(u16*)copy_of_data_type=*(u16*)M->Data[full];
+					}
+					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
+					{
+						*(u32*)copy_of_data_type=*(u32*)M->Data[full];
+					}
+					else 
+					{
+						*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+					}		
 				}
-				if(data <= One_byte)
+				else
 				{
-					*(u8*)copy_of_data_type=*(u8*)M->Data[full];
-				}
-				else if(data <= two_bytes)
-				{
-					*(u16*)copy_of_data_type=*(u16*)M->Data[full];
-				}
-				else if(data>two_bytes&&data<=Four_bytes)
-				{
-					*(u32*)copy_of_data_type=*(u32*)M->Data[full];
-				}
-				else 
-				{
-					*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+					if(data <= One_byte)
+					{
+						*(u8*)copy_of_data_type=*(u8*)M->Data[full];
+					}
+					else if(data <= two_bytes)
+					{
+						*(u16*)copy_of_data_type=*(u16*)M->Data[full];
+					}
+					else if(data>two_bytes&&data<=Four_bytes)
+					{
+						*(u32*)copy_of_data_type=*(u32*)M->Data[full];
+					}
+					else 
+					{
+						*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+					}
 				}
 				M->Mailbox_Receive_flag=empty;
 				M->Mailbox_SBF=empty;
@@ -178,22 +235,41 @@ void OS_VidMailbox_Receive(Mailbox *M,void**copy_of_data_type,Size data)
 				if(data > M->Mailbox_DataSize)
 				{
 				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+					if(M->Mailbox_DataSize <= One_byte)
+					{
+						*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
+					}
+					else if(M->Mailbox_DataSize <= two_bytes)
+					{
+						*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
+					}
+					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
+					{
+						*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
+					}
+					else 
+					{
+						*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+					}
 				}
-				if(data <= One_byte)
+				else
 				{
-					*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
-				}
-				else if(data <= two_bytes)
-				{
-					*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
-				}
-				else if(data>two_bytes&&data<=Four_bytes)
-				{
-					*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
-				}
-				else 
-				{
-					*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+					if(data <= One_byte)
+					{
+						*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
+					}
+					else if(data <= two_bytes)
+					{
+						*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
+					}
+					else if(data>two_bytes&&data<=Four_bytes)
+					{
+						*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
+					}
+					else 
+					{
+						*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+					}
 				}
 				M->Mailbox_Receive_flag=empty; // to test functionality
 			}
