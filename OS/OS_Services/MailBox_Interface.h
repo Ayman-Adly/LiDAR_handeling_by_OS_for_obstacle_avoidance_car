@@ -7,7 +7,8 @@ typedef struct
 	u8 		Mailbox_Send_flag;
 	u8 		Mailbox_SBF;
 	u8		Mailbox_DataSize;
-	void	*Data[2];
+	u8		**Data;
+	u8		*ptr;
 }Mailbox;
 
 /************************************************************************************************************************************/

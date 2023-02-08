@@ -21,35 +21,16 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 		M->Mailbox_Receive_flag=empty;
 		M->Mailbox_Send_flag=empty;
 		M->Mailbox_SBF=empty;
-		M->Data[empty]=NULL;
-		M->Data[full]=NULL;
-		M->Data[empty]=malloc(size);
-		M->Data[full]=malloc(size);
-		if(M->Data[empty]==NULL||M->Data[full]==NULL)
+		M->Data = (u8 **)malloc(size*2);
+		if(M->Data==NULL)
 		{
-			free(M->Data[empty]);
-			free(M->Data[full]);
+			free(M->Data);
 			successfull_OR_NOT = Not_successfull;
 		}
 		else
 		{
-			 M->Mailbox_DataSize=size;
-			if(size <= One_byte)
-			{
-				*(u8*)M->Data[empty]=0;
-			}
-			else if(size <= two_bytes)
-			{
-				*(u16*)M->Data[empty]=0;
-			}
-			else if(size > two_bytes&&size <= Four_bytes)
-			{
-				*(u32*)M->Data[empty]=0;
-			}
-			else 
-			{
-				*(f64*)M->Data[empty]=0;
-			}
+		M->Mailbox_DataSize=size;
+		M->ptr = (u8 *)(M->Data+2);
 		}
 	return successfull_OR_NOT;
 }
@@ -67,53 +48,36 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 {
 		u8 ReturnState;  // 0(Fail)   or   1(Success)
+		printf("\nValue of u8 copy_of_data_type = %u\n",*(u8*)copy_of_data_type);
+		u8 *ptr =  (u8*)copy_of_data_type;
 		if(M->Mailbox_Send_flag == full) 
 		{
 			ReturnState = Fail;
 		}
 		else if(M->Mailbox_Send_flag == empty)
 		{
-
+			for(u8 i=0 ; i < 2 ; i++ )
+			{
+				M->Data[i] = (M->ptr + M->Mailbox_DataSize * i);
+			}
 			if(M->Mailbox_Receive_flag==empty)
 			{
 				M->Mailbox_Send_flag=full;
 				if(data > M->Mailbox_DataSize)
 				{
 					//warning Massege	that i'll only save on Mailbox Size and data will overflow 
-					if(M->Mailbox_DataSize <= One_byte)
+					
+					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
 					{
-						*(u8*)M->Data[empty]=*(u8*)copy_of_data_type;
+						M->Data[empty][i] = *ptr++;
 					}
-					else if(M->Mailbox_DataSize <= two_bytes)
-					{
-						*(u16*)M->Data[empty]=*(u16*)copy_of_data_type;
-					}
-					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
-					{
-						*(u32*)M->Data[empty]=*(u32*)copy_of_data_type;
-					}
-					else 
-					{
-						*(f64*)M->Data[empty]=*(f64*)copy_of_data_type;
-					}
+				
 				}
 				else
 				{
-					if(data <= One_byte)
+					for(u8 i=0 ; i < data ; i++ )
 					{
-						*(u8*)M->Data[empty]=*(u8*)copy_of_data_type;
-					}
-					else if(data <= two_bytes)
-					{
-						*(u16*)M->Data[empty]=*(u16*)copy_of_data_type;
-					}
-					else if(data>two_bytes&&data<=Four_bytes)
-					{
-						*(u32*)M->Data[empty]=*(u32*)copy_of_data_type;
-					}
-					else 
-					{
-						*(f64*)M->Data[empty]=*(f64*)copy_of_data_type;
+						M->Data[empty][i] = *ptr++;
 					}
 				}
 				M->Mailbox_Send_flag=empty;
@@ -121,49 +85,51 @@ SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 			}
 			else if(M->Mailbox_Receive_flag==full)
 			{
-				M->Mailbox_Send_flag=full;
-				if(data > M->Mailbox_DataSize)
+				if(M->Mailbox_SBF==full)
 				{
-				//warning Massege	that i'll only save on Mailbox Size and data will overflow
-					if(M->Mailbox_DataSize <= One_byte)
+				
+					M->Mailbox_Send_flag=full;
+					if(data > M->Mailbox_DataSize)
 					{
-						*(u8*)M->Data[full]=*(u8*)copy_of_data_type;
+						//warning Massege	that i'll only save on Mailbox Size and data will overflow
+						for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
+						{
+							M->Data[empty][i] = *ptr++;
+						}			
 					}
-					else if(M->Mailbox_DataSize <= two_bytes)
+					else
 					{
-						*(u16*)M->Data[full]=*(u16*)copy_of_data_type;
+						for(u8 i=0 ; i < data ; i++ )
+						{
+							M->Data[empty][i] = *ptr++;
+						}
 					}
-					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
-					{
-						*(u32*)M->Data[full]=*(u32*)copy_of_data_type;
-					}
-					else 
-					{
-						*(f64*)M->Data[full]=*(f64*)copy_of_data_type;
-					}				
+					M->Mailbox_SBF=full;
+					M->Mailbox_Send_flag=empty;
+					ReturnState = Success;
 				}
 				else
 				{
-					if(data <= One_byte)
+					M->Mailbox_Send_flag=full;
+					if(data > M->Mailbox_DataSize)
 					{
-						*(u8*)M->Data[full]=*(u8*)copy_of_data_type;
+					//warning Massege	that i'll only save on Mailbox Size and data will overflow
+						for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
+						{
+							M->Data[full][i] = *ptr++;
+						}				
 					}
-					else if(data <= two_bytes)
+					else
 					{
-						*(u16*)M->Data[full]=*(u16*)copy_of_data_type;
+						for(u8 i=0 ; i < data ; i++ )
+						{
+							M->Data[full][i] = *ptr++;
+						}
 					}
-					else if(data>two_bytes&&data<=Four_bytes)
-					{
-						*(u32*)M->Data[full]=*(u32*)copy_of_data_type;
-					}
-					else 
-					{
-						*(f64*)M->Data[full]=*(f64*)copy_of_data_type;
-					}
+					M->Mailbox_SBF=full;
+					M->Mailbox_Send_flag=empty;
+					ReturnState = Success;
 				}
-				M->Mailbox_SBF=full;
-				M->Mailbox_Send_flag=empty;
-				ReturnState = Success;
 			}
 		}
 	return ReturnState;
@@ -180,9 +146,14 @@ SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 ************************************************************************************************************************************/
 void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 {
-	
+	u8 *ptr = (u8*) copy_of_data_type;
+	printf("\nValue of Received u8 copy_of_data_type = %d\n",*ptr);
 		if(M->Mailbox_Send_flag == empty) 
 		{
+			for(u8 i=0 ; i < 2 ; i++ )
+			{
+				M->Data[i] = (M->ptr + M->Mailbox_DataSize * i);
+			}	
 			if(M->Mailbox_SBF==full)
 			{
 				M->Mailbox_Receive_flag=full;
@@ -190,40 +161,16 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				if(data > M->Mailbox_DataSize)
 				{
 					//warning Massege	that i'll only save on Mailbox Size and data will overflow
-					if(M->Mailbox_DataSize <= One_byte)
+					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
 					{
-						*(u8*)copy_of_data_type=*(u8*)M->Data[full];
-					}
-					else if(M->Mailbox_DataSize <= two_bytes)
-					{
-						*(u16*)copy_of_data_type=*(u16*)M->Data[full];
-					}
-					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
-					{
-						*(u32*)copy_of_data_type=*(u32*)M->Data[full];
-					}
-					else 
-					{
-						*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+						*ptr++= M->Data[full][i];
 					}		
 				}
 				else
 				{
-					if(data <= One_byte)
+					for(u8 i=0 ; i < data ; i++ )
 					{
-						*(u8*)copy_of_data_type=*(u8*)M->Data[full];
-					}
-					else if(data <= two_bytes)
-					{
-						*(u16*)copy_of_data_type=*(u16*)M->Data[full];
-					}
-					else if(data>two_bytes&&data<=Four_bytes)
-					{
-						*(u32*)copy_of_data_type=*(u32*)M->Data[full];
-					}
-					else 
-					{
-						*(f64*)copy_of_data_type=*(f64*)M->Data[full];
+						*ptr++= M->Data[full][i];
 					}
 				}
 				M->Mailbox_Receive_flag=empty;
@@ -235,40 +182,16 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				if(data > M->Mailbox_DataSize)
 				{
 				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
-					if(M->Mailbox_DataSize <= One_byte)
+					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
 					{
-						*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
-					}
-					else if(M->Mailbox_DataSize <= two_bytes)
-					{
-						*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
-					}
-					else if(M->Mailbox_DataSize > two_bytes && M->Mailbox_DataSize <= Four_bytes)
-					{
-						*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
-					}
-					else 
-					{
-						*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+						*ptr++= M->Data[empty][i];
 					}
 				}
 				else
 				{
-					if(data <= One_byte)
+					for(u8 i=0 ; i < data ; i++ )
 					{
-						*(u8*)copy_of_data_type=*(u8*)M->Data[empty];
-					}
-					else if(data <= two_bytes)
-					{
-						*(u16*)copy_of_data_type=*(u16*)M->Data[empty];
-					}
-					else if(data>two_bytes&&data<=Four_bytes)
-					{
-						*(u32*)copy_of_data_type=*(u32*)M->Data[empty];
-					}
-					else 
-					{
-						*(f64*)copy_of_data_type=*(f64*)M->Data[empty];
+						*ptr++= M->Data[empty][i];
 					}
 				}
 				M->Mailbox_Receive_flag=empty; // to test functionality
