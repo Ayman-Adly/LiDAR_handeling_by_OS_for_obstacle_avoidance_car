@@ -21,7 +21,7 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 		M->Mailbox_Receive_flag=empty;
 		M->Mailbox_Send_flag=empty;
 		M->Mailbox_SBF=empty;
-		M->Data = (u8 **)malloc(size*2);
+		M->Data = (u8 **)malloc(2+size*2);
 		if(M->Data==NULL)
 		{
 			free(M->Data);
@@ -47,8 +47,7 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 ************************************************************************************************************************************/
 SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 {
-		u8 ReturnState;  // 0(Fail)   or   1(Success)
-		printf("\nValue of u8 copy_of_data_type = %u\n",*(u8*)copy_of_data_type);
+		u8 ReturnState;  // 0(Fail)   or   1(Success)	
 		u8 *ptr =  (u8*)copy_of_data_type;
 		if(M->Mailbox_Send_flag == full) 
 		{
@@ -147,7 +146,6 @@ SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 {
 	u8 *ptr = (u8*) copy_of_data_type;
-	printf("\nValue of Received u8 copy_of_data_type = %d\n",*ptr);
 		if(M->Mailbox_Send_flag == empty) 
 		{
 			for(u8 i=0 ; i < 2 ; i++ )
