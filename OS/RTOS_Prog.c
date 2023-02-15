@@ -96,10 +96,7 @@ static void vidSchedular(void)
 
 			}
 			}
-			else
-			{
-				pstNextTask->FirstDelay--;
-			}
+			
 
 		}
 
@@ -117,16 +114,19 @@ static void vidSchedular(void)
 	do 
 	{
 		// If the task is ready to run, or it's currently running...
-		if ( (pstNextTask->TaskState == TASK_READY ) && (pstNextTask->FirstDelay==0) )
+		if  (pstNextTask->TaskState == TASK_READY ) 
 		{
+			if (pstNextTask->FirstDelay==0) 
+			{
 			// and the priority is > highest priority
 			if (pstNextTask->Priority == HighPri)
 			{
 				// Assign the priority level to run
 				HighPri = pstNextTask->Priority;
 				pstNextTask->TaskFunc();
-				pstNextTask->FirstDelay=pstNextTask->periodicity-1;
+				pstNextTask->FirstDelay=pstNextTask->periodicity;
 				break;
+			}
 			}
 		}
 
@@ -134,5 +134,27 @@ static void vidSchedular(void)
 		pstNextTask = pstNextTask->Next;
 
 	} while (pstEnd != pstNextTask);	// Haven't gone through the entire list.
+	
+
+
+	pstEnd = HeadNode->Next;
+	pstNextTask = HeadNode->Next;
+	do 
+	{
+		// If the task is ready to run, or it's currently running...
+		if  (pstNextTask->TaskState == TASK_READY ) 
+		{
+			if (pstNextTask->FirstDelay!=0) 
+			{
+			pstNextTask->FirstDelay--;
+			
+			}
+		}
+
+		// Next in the list...
+		pstNextTask = pstNextTask->Next;
+
+	} while (pstEnd != pstNextTask);	// Haven't gone through the entire list.
+	
 	}
 
