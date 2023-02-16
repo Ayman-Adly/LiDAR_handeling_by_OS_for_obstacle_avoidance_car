@@ -5,7 +5,7 @@ typedef struct
 {
 	u8 		Mailbox_Receive_flag;
 	u8 		Mailbox_Send_flag;
-	u8 		Mailbox_SBF;
+	u8 		Mailbox_SBF;		//Second Buffer Flag
 	u8		Mailbox_DataSize;
 	u8		*Data[2];
 }Mailbox;
@@ -41,6 +41,23 @@ typedef enum{
 	Eight_bytes=8
 }Size;
 
+
+typedef enum{
+	Not_Receiving=0,
+	Receiving=1
+}RECEIVE;
+
+typedef enum{
+	Not_Sending=0,
+	Sending=1
+}SEND;
+
+
+typedef enum{
+	Not_Used=0,
+	Used=1
+}SECOND_BUFFER;
+
 typedef void* DataType;
 
 /************************************************************************************************************************************/
@@ -55,7 +72,7 @@ typedef void* DataType;
 *
 *@return	: MBS enum value either holding (successfull)-->(1) location Reserved OR  ERROR could not Reserve location (Not_successfull)-->(0)	
 ************************************************************************************************************************************/	
-MBS OS_enuMailbox_Create(Mailbox *M,Size data);
+MBS OS_enuMailbox_Create(Mailbox *M,Size SizeOfData);
 
 
 /***********************************************************************************************************************************
@@ -67,7 +84,7 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size data);
 *
 *@return	: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
 ************************************************************************************************************************************/
-SMS OS_enuMailbox_Send( Mailbox *M, void *PointerToDataSended ,Size data);
+SMS OS_enuMailbox_Send( Mailbox *M, void *PointerToDataSended ,Size SizeOfData);
 
 
 /***********************************************************************************************************************************
@@ -79,6 +96,6 @@ SMS OS_enuMailbox_Send( Mailbox *M, void *PointerToDataSended ,Size data);
 *
 *@return	: void 
 ************************************************************************************************************************************/
-void OS_VidMailbox_Receive( Mailbox *M,void *PointerToDataRecived,Size data);
+void OS_VidMailbox_Receive( Mailbox *M,void *PointerToDataRecived,Size SizeOfDataRecived);
 
 #endif

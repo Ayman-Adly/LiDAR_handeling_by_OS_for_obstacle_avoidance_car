@@ -17,23 +17,23 @@
 ************************************************************************************************************************************/	
 MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 {
-		u8 successfull_OR_NOT = successfull;
-		M->Mailbox_Receive_flag=empty;
-		M->Mailbox_Send_flag=empty;
-		M->Mailbox_SBF=empty;
-		M->Data[0] = (u8 *)malloc(size);
-		M->Data[1] =(u8 *)malloc(size);
-		if(M->Data[0]==NULL||M->Data[1]==NULL)
+		u8 State = successfull;
+		M->Mailbox_Receive_flag=Not_Receiving;
+		M->Mailbox_Send_flag=Not_Sending;
+		M->Mailbox_SBF=Not_Used;
+		M->Data[empty] =(u8 *)malloc(size);
+		M->Data[full] =(u8 *)malloc(size);
+		if(M->Data[empty]==NULL||M->Data[full]==NULL)
 		{
-			free(M->Data[0]);
-			free(M->Data[1]);
-			successfull_OR_NOT = Not_successfull;
+			free(M->Data[empty]);
+			free(M->Data[full]);
+			State = Not_successfull;
 		}
 		else
 		{
-		M->Mailbox_DataSize=size;
+			M->Mailbox_DataSize=size;
 		}
-	return successfull_OR_NOT;
+	return State;
 }
 
 
@@ -46,79 +46,87 @@ MBS OS_enuMailbox_Create(Mailbox *M,Size size)
 *
 *@return	: SMS enum value either holding (Fail) could not Send OR  (Success) Send Done 
 ************************************************************************************************************************************/
-SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
+SMS OS_enuMailbox_Send(Mailbox *M,void *PointerToDataSended,Size SizeOfDataSended)
 {
-		u8 ReturnState;  // 0(Fail)   or   1(Success)	
-		u8 *ptr =  (u8*)copy_of_data_type;
-		if(M->Mailbox_Send_flag == full) 
+		u8 ReturnState;  // 0(Fail)   or   1(Success)
+			
+		if(PointerToDataSended==NULL)
 		{
 			ReturnState = Fail;
 		}
-		else if(M->Mailbox_Send_flag == empty)
+		else
 		{
-			M->Mailbox_Send_flag=full;
-			if(M->Mailbox_Receive_flag==empty)
+			u8 *ptr =  (u8*)PointerToDataSended;
+			if(M->Mailbox_Send_flag == Sending) 
 			{
-				if(data > M->Mailbox_DataSize)
+				ReturnState = Fail;
+			}
+			else if(M->Mailbox_Send_flag == Not_Sending)
+			{
+				M->Mailbox_Send_flag=Sending;
+				if(M->Mailbox_Receive_flag==Not_Receiving)
 				{
-					//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+					if(SizeOfDataSended > M->Mailbox_DataSize)
+					{
+						//warning Massege	that i'll only save on Mailbox Size and data will overflow 
+						
+						for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
+						{
+							M->Data[empty][i] = *ptr++;
+						}
 					
-					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
-					{
-						M->Data[empty][i] = *ptr++;
 					}
-				
-				}
-				else
-				{
-					for(u8 i=0 ; i < data ; i++ )
+					else
 					{
-						M->Data[empty][i] = *ptr++;
+						for(u8 i=0 ; i < SizeOfDataSended ; i++ )
+						{
+							M->Data[empty][i] = *ptr++;
+						}
 					}
 				}
-			}
-			else if(M->Mailbox_Receive_flag==full)
-			{
-				if(M->Mailbox_SBF==full)
+				else if(M->Mailbox_Receive_flag==Receiving)
 				{
-					if(data > M->Mailbox_DataSize)
+					if(M->Mailbox_SBF==Used)
 					{
+						if(SizeOfDataSended > M->Mailbox_DataSize)
+						{
+							//warning Massege	that i'll only save on Mailbox Size and data will overflow
+							for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
+							{
+								M->Data[empty][i] = *ptr++;
+							}			
+						}
+						else
+						{
+							for(u8 i=0 ; i < SizeOfDataSended ; i++ )
+							{
+								M->Data[empty][i] = *ptr++;
+							}
+						}
+					}
+					else
+					{
+						if(SizeOfDataSended > M->Mailbox_DataSize)
+						{
 						//warning Massege	that i'll only save on Mailbox Size and data will overflow
-						for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
-						{
-							M->Data[empty][i] = *ptr++;
-						}			
-					}
-					else
-					{
-						for(u8 i=0 ; i < data ; i++ )
-						{
-							M->Data[empty][i] = *ptr++;
+							for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
+							{
+								M->Data[full][i] = *ptr++;
+							}				
 						}
+						else
+						{
+							for(u8 i=0 ; i < SizeOfDataSended ; i++ )
+							{
+								M->Data[full][i] = *ptr++;
+							}
+						}
+						M->Mailbox_SBF=Used;
 					}
 				}
-				else
-				{
-					if(data > M->Mailbox_DataSize)
-					{
-					//warning Massege	that i'll only save on Mailbox Size and data will overflow
-						for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
-						{
-							M->Data[full][i] = *ptr++;
-						}				
-					}
-					else
-					{
-						for(u8 i=0 ; i < data ; i++ )
-						{
-							M->Data[full][i] = *ptr++;
-						}
-					}
-					M->Mailbox_SBF=full;
-				}
+					M->Mailbox_Send_flag=Not_Sending;
+					ReturnState =Success;
 			}
-				M->Mailbox_Send_flag=empty;
-				ReturnState =Success;
 		}
 	return ReturnState;
 }
@@ -132,17 +140,17 @@ SMS OS_enuMailbox_Send(Mailbox *M,void *copy_of_data_type,Size data)
 *
 *@return	: void 
 ************************************************************************************************************************************/
-void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
+void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size SizeOfDataRecived)
 {
 	u8 *ptr = (u8*) copy_of_data_type;
-		if(M->Mailbox_Send_flag == empty) 
+		if(M->Mailbox_Send_flag == Not_Sending) 
 		{
-			M->Mailbox_Receive_flag=full;
+			M->Mailbox_Receive_flag=Receiving;
 			
-			if(M->Mailbox_SBF==full)
+			if(M->Mailbox_SBF==Used)
 			{
 				
-				if(data > M->Mailbox_DataSize)
+				if(SizeOfDataRecived > M->Mailbox_DataSize)
 				{
 					//warning Massege	that i'll only save on Mailbox Size and data will overflow
 					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
@@ -152,17 +160,17 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				}
 				else
 				{
-					for(u8 i=0 ; i < data ; i++ )
+					for(u8 i=0 ; i < SizeOfDataRecived ; i++ )
 					{
 						*ptr++= M->Data[full][i];
 					}
 				}
-				M->Mailbox_SBF=empty;
+				M->Mailbox_SBF=Not_Used;
 			}
 			else
 			{
-				M->Mailbox_Receive_flag=full;
-				if(data > M->Mailbox_DataSize)
+				M->Mailbox_Receive_flag=Receiving;
+				if(SizeOfDataRecived > M->Mailbox_DataSize)
 				{
 				//warning Massege	that i'll only save on Mailbox Size and data will overflow 
 					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
@@ -172,21 +180,21 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				}
 				else
 				{
-					for(u8 i=0 ; i < data ; i++ )
+					for(u8 i=0 ; i < SizeOfDataRecived ; i++ )
 					{
 						*ptr++= M->Data[empty][i];
 					}
 				} 
 			}
-			M->Mailbox_Receive_flag=empty;
+			M->Mailbox_Receive_flag=Not_Receiving;
 		}
-		else(M->Mailbox_Send_flag == full)
+		else if(M->Mailbox_Send_flag == Sending)
 		{
-			M->Mailbox_Receive_flag=full;
-			if(M->Mailbox_SBF==full)
+			M->Mailbox_Receive_flag=Receiving;
+			if(M->Mailbox_SBF==Used)
 			{
 				
-				if(data > M->Mailbox_DataSize)
+				if(SizeOfDataRecived > M->Mailbox_DataSize)
 				{
 					//warning Massege	that i'll only save on Mailbox Size and data will overflow
 					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
@@ -196,7 +204,7 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				}
 				else
 				{
-					for(u8 i=0 ; i < data ; i++ )
+					for(u8 i=0 ; i < SizeOfDataRecived ; i++ )
 					{
 						*ptr++= M->Data[empty][i];
 					}
@@ -204,7 +212,7 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 			}
 			else
 			{
-				if(data > M->Mailbox_DataSize)
+				if(SizeOfDataRecived > M->Mailbox_DataSize)
 				{
 					//warning Massege	that i'll only save on Mailbox Size and data will overflow
 					for(u8 i=0 ; i < M->Mailbox_DataSize ; i++ )
@@ -214,12 +222,12 @@ void OS_VidMailbox_Receive(Mailbox *M,void *copy_of_data_type,Size data)
 				}
 				else
 				{
-					for(u8 i=0 ; i < data ; i++ )
+					for(u8 i=0 ; i < SizeOfDataRecived ; i++ )
 					{
 						*ptr++= M->Data[full][i];
 					}
 				}
 			}
-			M->Mailbox_Receive_flag=empty;
+			M->Mailbox_Receive_flag=Not_Receiving;
 		}
 }
