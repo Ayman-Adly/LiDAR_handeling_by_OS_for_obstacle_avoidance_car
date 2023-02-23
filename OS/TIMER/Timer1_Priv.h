@@ -48,4 +48,17 @@
 #define TOIE0  (0)
 #define OCIE0  (1)
 
+
+typedef struct
+{
+	volatile u32 CTRL  ;
+	u32 LOAD  ;
+	u32 VAL   ;
+	u32 CALIB ;
+} STK_t ;
+#define STK ((STK_t * )(0xE000E010))
+
+#define		STK_AHB_OVER_8_CLOCK	0
+#define		STK_AHB_CLOCK			1
+
 #endif /* TIMER0_PRIV_H_ */

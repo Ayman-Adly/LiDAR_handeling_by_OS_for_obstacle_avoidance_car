@@ -19,4 +19,5 @@
 
 /*select target*/
 #define TARGET  AVR
+
 #endif /* OS_CONFIG_H_ */

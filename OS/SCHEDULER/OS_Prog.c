@@ -33,17 +33,19 @@ Task_t SystemTasks[TASK_NUM] = { { NULL } };
 void OS_vidStart(void)
 {
 
-#if(TARGET==AVR)
+	#if(TARGET==AVR)
 
 	/*Global interrupt enable*/
 	GIE_vidEnable();
 	/*Timer init -> CTC MODE - Prescaller - Enable compare match  interrupt */
 	TIMER1_vidInit(OS_TICK);
 
-#elif(TARGET==ARM)
+	#elif(TARGET==ARM)
+	/*Systick init */
 
+	STK_vidinit(OS_TICK);
+	#endif
 
-#endif
 	while (1)
 	{
 		/*check if this the schedular time to run or not*/
@@ -71,7 +73,7 @@ void OS_vidStart(void)
  *@param		 Copy_u16FirstDelay 	        --> this is the time that task will be in waiting state at the start of the system in (ms)
  *@return	 u8                             -->
  *********************************************************************************************************************************************/
-u8 OS_sttCreateTask(u8 Copy_u8Periority, u16 Copy_u16Periodicity,void (*Copy_pvTaskFunc)(void), u16 Copy_u16FirstDelay)
+State_t OS_sttCreateTask(u8 Copy_u8Periority, u16 Copy_u16Periodicity,void (*Copy_pvTaskFunc)(void), u16 Copy_u16FirstDelay)
 {
 	/*assign of the Task code func and periodicity of every task in the System_Tasks depends on it's periority   */
 	u8 returnID = ID_INVALID;

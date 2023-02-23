@@ -2,17 +2,16 @@
 #include "../../LIB/STD_Types.h"
 #include "../../LIB/Bitmath.h"
 
-#include "Timer1_Priv.h"
-#include "Timer1_Interface.h"
+#include "Timer_Priv.h"
+#include "Timer_Interface.h"
 #include "avr/interrupt.h"
-
+#include "../SCHEDULER/OS_Config.h"
 extern u8 Scheduler_flag;
 
-//static System_tick =  SYS_TICK;
+#if(TARGET==AVR)
 
-static void (*Ptofunc_Timer1_CompareMatchISR)(void);
-
-static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal) {
+static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal)
+{
 	/*putting the compare match value in the OCR1A register*/
 	OCR1A_REG = CompareMatchVal;
 }
@@ -66,7 +65,39 @@ void TIMER1_vidSetOCompareMatchISR(void (*PtoCallbackfunc)(void))
 }
 ISR(TIMER1_COMPA_vect)
 {
-	Schedular_flag = 1;
-	//Ptofunc_Timer1_CompareMatchISR();
+	Scheduler_flag = 1;
+}
+
+#elif(TARGET==ARM)
+
+/* MSTK_voidInit : select the systick clock source , Disable the STK and Disable the STK interrupt */
+void MSTK_voidInit ( void )
+{
+	#if STK_CLOCK_SELECTION == STK_AHB_OVER_8_CLOCK
+			STK->CTRL = 0X00000000 ;
+
+	#elif STK_CLOCK_SELECTION == STK_AHB_CLOCK
+			STK->CTRL = 0X00000004 ;
+	#else
+			#error " STK clock selection is not true "
+	#endif
 
 }
+void STK_vidinit (u32 copy_u32Ticks)
+{
+	MSTK_voidInit();
+	STK->LOAD = (copy_u32Ticks - 1)*2000  ;
+	STK->VAL  = 0 ;
+	SET_BIT(STK->CTRL,0); /* Enable STK */
+	SET_BIT(STK->CTRL,1); /* Enable STK interrupt */
+}
+
+void SysTick_Handler (void)
+{
+	Scheduler_flag=1;
+
+
+}
+
+#endif
+
