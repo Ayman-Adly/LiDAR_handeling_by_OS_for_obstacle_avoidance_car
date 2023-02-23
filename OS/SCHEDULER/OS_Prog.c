@@ -30,22 +30,32 @@ Task_t SystemTasks[TASK_NUM] = { { NULL } };
  *@param		 void
  *@return	     void
  *********************************************************************************************************************************************/
-void OS_vidStart(void) {
+void OS_vidStart(void)
+{
 
-	/*set the schedular function to be run inside the ISR*/
+#if(TARGET==AVR)
 
 	/*Global interrupt enable*/
 	GIE_vidEnable();
 	/*Timer init -> CTC MODE - Prescaller - Enable compare match  interrupt */
 	TIMER1_vidInit(OS_TICK);
-	while (1) {
+
+#elif(TARGET==ARM)
+
+
+#endif
+	while (1)
+	{
 		/*check if this the schedular time to run or not*/
-		if (Schedular_flag == 1) {
+		if (Schedular_flag == 1)
+		{
 			/*clear schedular flag*/
 			Schedular_flag = 0;
 			/*run the schedular algorithm */
 			vidSchedular();
-		} else {
+		}
+		else
+		{
 			/*if there is no task that is run in the system , run the ideal task*/
 		}
 	}
@@ -61,8 +71,8 @@ void OS_vidStart(void) {
  *@param		 Copy_u16FirstDelay 	        --> this is the time that task will be in waiting state at the start of the system in (ms)
  *@return	 u8                             -->
  *********************************************************************************************************************************************/
-u8 OS_sttCreateTask(u8 Copy_u8Periority, u16 Copy_u16Periodicity,
-		void (*Copy_pvTaskFunc)(void), u16 Copy_u16FirstDelay) {
+u8 OS_sttCreateTask(u8 Copy_u8Periority, u16 Copy_u16Periodicity,void (*Copy_pvTaskFunc)(void), u16 Copy_u16FirstDelay)
+{
 	/*assign of the Task code func and periodicity of every task in the System_Tasks depends on it's periority   */
 	u8 returnID = ID_INVALID;
 	/*check if the user number of creation of task call equal to the number of tasks that he select in the OS_config or less*/

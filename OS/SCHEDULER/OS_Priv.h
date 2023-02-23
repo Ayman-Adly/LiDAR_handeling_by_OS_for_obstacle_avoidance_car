@@ -8,6 +8,12 @@
 #ifndef OS_PRIV_H_
 #define OS_PRIV_H_
 
+
+
+/*Target selections*/
+#define AVR (0U)
+#define ARM (1U)
+
 /*this private enum used to define the state of task (suspended - resumed) */
 typedef enum
 {

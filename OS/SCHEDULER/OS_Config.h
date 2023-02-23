@@ -16,4 +16,7 @@
 
 /*write the system tick of the OS in ms*/
 #define OS_TICK     (1)
+
+/*select target*/
+#define TARGET  AVR
 #endif /* OS_CONFIG_H_ */

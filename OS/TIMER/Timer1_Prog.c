@@ -58,13 +58,14 @@ void TIMER1_vidInit(u8 system_tick)
 
 	/*Enable Timer1 Interrupt*/
 	SET_BIT(TIMSK_REG, OCIE1A);
-
 }
 
-void TIMER1_vidSetOCompareMatchISR(void (*PtoCallbackfunc)(void)) {
+void TIMER1_vidSetOCompareMatchISR(void (*PtoCallbackfunc)(void))
+{
 	Ptofunc_Timer1_CompareMatchISR = PtoCallbackfunc;
 }
-ISR(TIMER1_COMPA_vect) {
+ISR(TIMER1_COMPA_vect)
+{
 	Schedular_flag = 1;
 	//Ptofunc_Timer1_CompareMatchISR();
 
