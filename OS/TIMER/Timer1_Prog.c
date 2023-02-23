@@ -2,8 +2,8 @@
 #include "../../LIB/STD_Types.h"
 #include "../../LIB/Bitmath.h"
 
-#include "Timer_Priv.h"
-#include "Timer_Interface.h"
+#include "Timer1_Priv.h"
+#include "Timer1_Interface.h"
 #include "avr/interrupt.h"
 #include "../SCHEDULER/OS_Config.h"
 extern u8 Scheduler_flag;
