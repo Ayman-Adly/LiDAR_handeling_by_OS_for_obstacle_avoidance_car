@@ -58,7 +58,7 @@ typedef struct
 *@param		 void
 *@return	 void
 /*********************************************************************************************************************************************/
-static void vidSchedular(void);
+static void vidScheduler(void);
 /*********************************************************************************************************************************************/
 /*@brief		this private function is used to sort the system tasks after creation against tasks priority
 *this is Detailed Disc

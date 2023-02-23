@@ -18,7 +18,7 @@
 static u8 ID = 0;
 
 /*this flag is set by timer interrupt and indicates of the the schedular algorithm time to run */
-u8 Schedular_flag;
+u8 Scheduler_flag;
 
 /* create objects from Task type depends on the user selection of number of tasks in the
  RTOS_Config.h and initialize all Tasks with 0 to detect then if there are functions not created */
@@ -47,12 +47,12 @@ void OS_vidStart(void)
 	while (1)
 	{
 		/*check if this the schedular time to run or not*/
-		if (Schedular_flag == 1)
+		if (Scheduler_flag == 1)
 		{
 			/*clear schedular flag*/
-			Schedular_flag = 0;
+			Scheduler_flag = 0;
 			/*run the schedular algorithm */
-			vidSchedular();
+			vidScheduler();
 		}
 		else
 		{
@@ -108,7 +108,7 @@ u8 OS_sttCreateTask(u8 Copy_u8Periority, u16 Copy_u16Periodicity,void (*Copy_pvT
 	return returnID;
 }
 
-static void vidSchedular(void) {
+static void vidScheduler(void) {
 
 	/*task counter to check all the tasks wants to run at this tick*/
 	static u8 TaskCounter;

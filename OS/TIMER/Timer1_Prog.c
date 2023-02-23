@@ -6,7 +6,7 @@
 #include "Timer1_Interface.h"
 #include "avr/interrupt.h"
 
-extern u8 Schedular_flag;
+extern u8 Scheduler_flag;
 
 //static System_tick =  SYS_TICK;
 
