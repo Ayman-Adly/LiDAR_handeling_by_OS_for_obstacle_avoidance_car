@@ -1,5 +1,5 @@
 /***************************************************************************************/
-/* Author               : Moamen ehab / Ehap ashraf                                    */
+/* Author               : Moamen ehab                                                  */
 /* Version              : V0.0.0                                                       */
 /* Date                 : 2 - 2  -2023                                                 */
 /* Description          : TIMER1_Interface.h -> Function Prototypes                    */
@@ -10,8 +10,8 @@
 /*        04- static void TIMER1_vidSetTimer1Prescaller(void);                         */
 
 /***************************************************************************************/
-#ifndef TIMER1_INTERFACE_H_
-#define TIMER1_INTERFACE_H_
+#ifndef TIMER0_INTERFACE_H_
+#define TIMER0_INTERFACE_H_
 
 /******************************** public functions**************************************/
 /***************************************************************************************/
@@ -60,26 +60,5 @@ static void TIMER1_vidSetMode(void);
 
 /***************************************************************************************/
 static void TIMER1_vidSetTimer1Prescaller(void);
-
-
-
-/***************************************************************************************/
-/*                          01- void STK_vidInit ( void )                              */
-/*-------------------------------------------------------------------------------------*/
-/* @fu TIMER1_vidInit                                                                  */
-/* @brief  This Function is used to initialize Systick                                 */
-/* @param[out] : void                                                                  */
-/* @param[in]  : void                                                                  */
-/***************************************************************************************/
-void STK_vidInit ( void );
-/***************************************************************************************/
-/*                          02-void STK_vidinit (u32 copy_u32Ticks)                           */
-/*-------------------------------------------------------------------------------------*/
-/* @fu TIMER1_vidInit                                                                  */
-/* @brief  This Function is used to initialize Systick                                 */
-/* @param[out] : void                                                                  */
-/* @param[in]  : void                                                                  */
-/***************************************************************************************/
-void STK_vidinit (u32 copy_u32Ticks);
 
 #endif /* TIMER0_INTERFACE_H_ */

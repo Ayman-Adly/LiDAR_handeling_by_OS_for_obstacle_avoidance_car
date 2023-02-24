@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Task_Control</class>
+ <widget class="QDialog" name="Task_Control">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>760</width>
+    <height>495</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TASK_Config</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>29</y>
+     <width>751</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QLineEdit" name="TN2"/>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLabel" name="label_4">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>periodicity (ms)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="Priority2"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLineEdit" name="TN1"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="Priority1"/>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLineEdit" name="TN8"/>
+    </item>
+    <item row="2" column="3">
+     <widget class="QLineEdit" name="FD2"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="TN4"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLineEdit" name="TN6"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>TASKS Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>First Delay(ms)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLineEdit" name="TN7"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="Periodicity1"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Priority</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLineEdit" name="TN3"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLineEdit" name="FD1"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLineEdit" name="TN5"/>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLineEdit" name="TN9"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLineEdit" name="Periodicity2"/>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLineEdit" name="TN10"/>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="Priority3"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="Priority4"/>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="Priority5"/>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="Priority6"/>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="Priority7"/>
+    </item>
+    <item row="8" column="1">
+     <widget class="QLineEdit" name="Priority8"/>
+    </item>
+    <item row="9" column="1">
+     <widget class="QLineEdit" name="Priority9"/>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLineEdit" name="Priority10"/>
+    </item>
+    <item row="3" column="2">
+     <widget class="QLineEdit" name="Periodicity3"/>
+    </item>
+    <item row="4" column="2">
+     <widget class="QLineEdit" name="Periodicity4"/>
+    </item>
+    <item row="5" column="2">
+     <widget class="QLineEdit" name="Periodicity5"/>
+    </item>
+    <item row="6" column="2">
+     <widget class="QLineEdit" name="Periodicity6"/>
+    </item>
+    <item row="7" column="2">
+     <widget class="QLineEdit" name="Periodicity7"/>
+    </item>
+    <item row="8" column="2">
+     <widget class="QLineEdit" name="Periodicity8"/>
+    </item>
+    <item row="9" column="2">
+     <widget class="QLineEdit" name="Periodicity9"/>
+    </item>
+    <item row="10" column="2">
+     <widget class="QLineEdit" name="Periodicity10"/>
+    </item>
+    <item row="3" column="3">
+     <widget class="QLineEdit" name="FD3"/>
+    </item>
+    <item row="4" column="3">
+     <widget class="QLineEdit" name="FD4"/>
+    </item>
+    <item row="5" column="3">
+     <widget class="QLineEdit" name="FD5"/>
+    </item>
+    <item row="6" column="3">
+     <widget class="QLineEdit" name="FD6"/>
+    </item>
+    <item row="7" column="3">
+     <widget class="QLineEdit" name="FD7"/>
+    </item>
+    <item row="8" column="3">
+     <widget class="QLineEdit" name="FD8"/>
+    </item>
+    <item row="9" column="3">
+     <widget class="QLineEdit" name="FD9"/>
+    </item>
+    <item row="10" column="3">
+     <widget class="QLineEdit" name="FD10"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>384</x>
+     <y>360</y>
+     <width>371</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Submit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>360</y>
+     <width>381</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>Task_Control</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>129</x>
+     <y>371</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>128</x>
+     <y>481</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

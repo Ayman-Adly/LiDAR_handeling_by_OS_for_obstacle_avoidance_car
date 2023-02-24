@@ -1,6 +1,6 @@
 
 #include "../../LIB/STD_Types.h"
-#include "../../LIB/Bitmath.h"
+#include "../../LIB/Bit_Manipulation.h"
 
 #include "Timer1_Priv.h"
 #include "Timer1_Interface.h"
@@ -10,40 +10,20 @@ extern u8 Scheduler_flag;
 
 #if(TARGET==AVR)
 
-static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal)
-{
-	/*putting the compare match value in the OCR1A register*/
-	OCR1A_REG = CompareMatchVal;
-}
 
-void TIMER1_vidStopTimer(void)
-{
 
-	CLR_BIT(TCCR1B_REG, CS10);
-	CLR_BIT(TCCR1B_REG, CS11);
-	CLR_BIT(TCCR1B_REG, CS12);
 
-}
-
-static void TIMER1_vidSetMode(void)
-{
-
-	/*selecting CTC mode*/
-	CLR_BIT(TCCR1A_REG, WGM10);
-	CLR_BIT(TCCR1A_REG, WGM11);
-	SET_BIT(TCCR1B_REG, WGM12);
-	CLR_BIT(TCCR1B_REG, WGM13);
-
-}
-
-static void TIMER1_vidSetTimer1Prescaller(void)
-{
-	/*selecting prescaller of 64 now we have MHZ clock freq*/
-	SET_BIT(TCCR1B_REG, CS10);
-	SET_BIT(TCCR1B_REG, CS11);
-	CLR_BIT(TCCR1B_REG, CS12);
-
-}
+/***************************************************************************************/
+/*                          01- void TIMER1_vidInit(void)                              */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to initialize timer 1                                 */
+/*             - set timer1 Mode                                                       */
+/*             - set timer 1 Prescaller                                                */
+/*             - Enable Timer1 interrupt                                               */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
+/***************************************************************************************/
 void TIMER1_vidInit(u8 system_tick)
 {
 	/*select timer mode*/
@@ -58,19 +38,78 @@ void TIMER1_vidInit(u8 system_tick)
 	/*Enable Timer1 Interrupt*/
 	SET_BIT(TIMSK_REG, OCIE1A);
 }
+/***************************************************************************************/
+/*              static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal)      */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set compare match val of timer 1                   */
+/* @param[out] : void                                                                  */
+/* @param[in]  : u16 CompareMatchVal                                                   */
+/***************************************************************************************/
+static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal)
+{
+	/*putting the compare match value in the OCR1A register*/
+	OCR1A_REG = CompareMatchVal;
+}
 
-void TIMER1_vidSetOCompareMatchISR(void (*PtoCallbackfunc)(void))
+/***************************************************************************************/
+/*              static void TIMER1_vidSetOCR1AComparMatchVal(u16 CompareMatchVal)      */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set   timer 1  mode                                */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
+/***************************************************************************************/
+
+static void TIMER1_vidSetMode(void)
 {
-	Ptofunc_Timer1_CompareMatchISR = PtoCallbackfunc;
+
+	/*selecting CTC mode*/
+	CLR_BIT(TCCR1A_REG, WGM10);
+	CLR_BIT(TCCR1A_REG, WGM11);
+	SET_BIT(TCCR1B_REG, WGM12);
+	CLR_BIT(TCCR1B_REG, WGM13);
+
 }
-ISR(TIMER1_COMPA_vect)
+/***************************************************************************************/
+/*              static void TIMER1_vidSetTimer1Prescaller(void)                        */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set   timer 1  prescaller                          */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
+/***************************************************************************************/
+static void TIMER1_vidSetTimer1Prescaller(void)
 {
-	Scheduler_flag = 1;
+	/*selecting prescaller of 64 now we have MHZ clock freq*/
+	SET_BIT(TCCR1B_REG, CS10);
+	SET_BIT(TCCR1B_REG, CS11);
+	CLR_BIT(TCCR1B_REG, CS12);
+
 }
+/***************************************************************************************/
+/*              static void TIMER1_vidSetTimer1Prescaller(void)                        */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set   timer 1  prescaller                          */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
+/***************************************************************************************/
+
+
 
 #elif(TARGET==ARM)
 
 /* MSTK_voidInit : select the systick clock source , Disable the STK and Disable the STK interrupt */
+
+/***************************************************************************************/
+/*              void MSTK_voidInit(void)                                               */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set   STK prescaller                               */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
+/***************************************************************************************/
 void MSTK_voidInit ( void )
 {
 	#if STK_CLOCK_SELECTION == STK_AHB_OVER_8_CLOCK
@@ -83,6 +122,14 @@ void MSTK_voidInit ( void )
 	#endif
 
 }
+
+/***************************************************************************************/
+/*             void STK_vidinit (u32 copy_u32Ticks)                                    */
+/*-------------------------------------------------------------------------------------*/
+/* @fu TIMER1_vidInit                                                                  */
+/* @brief  This Function is used to set   STK compare value                            */
+/* @param[out] : void                                                                  */
+/* @param[in]  : void                                                                  */
 void STK_vidinit (u32 copy_u32Ticks)
 {
 	MSTK_voidInit();
