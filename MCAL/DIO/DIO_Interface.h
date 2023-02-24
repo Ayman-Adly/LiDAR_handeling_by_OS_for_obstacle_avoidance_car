@@ -1,85 +1,119 @@
-/*
- * DIO_Interface.h
- *
- *  Created on: 18 Nov 2022
- *      Author: nour
+/**
+ * @file DIO_Interface.h
+ * @author Hisham Montaser 
+ * @brief This is the DIO_Interface.h file for function implementations . 
+ * @version 0.0.0
+ * @date 2-17-2023 (Date of documenting)
+ * @details This file has five function each function deal with each pin on ATMega32 either to be (Output, Input, High, Low).
  */
+/****************************************************************************************************************/
+/*Date                : 12 - 2 - 2023   (Date of implemeting)                                                   */
+/* 01- DIO_voidSetPinDirection                                                                                  */
+/* 02- DIO_voidSetPinValue                                                                                      */
+/* 03- DIO_voidSetPortValue                                                                                     */
+/* 04- DIO_voidSetPortDirection                                                                                 */
+/* 05- DIO_u8GetPinValue                                                                                        */
+/****************************************************************************************************************/
 
+/**************************************************************************************************************/
+/*                          HeaderGuard : Prevent Multiple calls of Interface.h header file                   */
+/**************************************************************************************************************/
 #ifndef DIO_INTERFACE_H_
 #define DIO_INTERFACE_H_
-/**********************************************/
-/********public functions prototypes***********/
-/**********************************************/
+
+/*************************************************************************************************************/
+/*                                              Function Prototypes                                          */
+/*************************************************************************************************************/
+
+/*************************************************************************************************************/
+/*                                               01- DIO_voidSetPinDirection                                 */
+/*-----------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief Function for setting pin direction . 
+ * @param  copy_u8Port --> Choosing Port (A,B,C,D) on ATMega32 .
+ * @param  copy_u8Pin  --> Choosing Pin (0, 1, 2, 3, 4, 5, 6, 7) on ATMega32 .
+ * @param  copy_u8Dir  --> Choosing Pin direction (OUTPUT, INPUT).
+ * @return void  
+ */
+/*************************************************************************************************************/
+void DIO_voidSetPinDirection 	(u8 copy_u8Port ,u8 copy_u8Pin , u8 copy_u8Dir );
+/*************************************************************************************************************/
+/*                                               02- DIO_voidSetPinValue                                     */
+/*-----------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief Function for setting pin value . 
+ * @param  copy_u8Port --> Choosing Port (A,B,C,D) on ATMega32 .
+ * @param  copy_u8Pin  --> Choosing Pin (0, 1, 2, 3, 4, 5, 6, 7) on ATMega32 .
+ * @param  copy_u8value  --> Choosing Pin value (HIGH, LOW).
+ * @return void  
+ */
+/*************************************************************************************************************/
+void DIO_voidSetPinValue  	    (u8 copy_u8Port ,u8 copy_u8Pin , u8 copy_u8value );
+/*************************************************************************************************************/
+/*                                               03- DIO_voidSetPortValue                                    */
+/*-----------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief Function for setting Port value . 
+ * @param  copy_u8Port --> Choosing Port (A,B,C,D) on ATMega32 .
+ * @param  copy_u8value  --> Choosing Pin value (HIGH, LOW).
+ * @return void  
+ */
+/*************************************************************************************************************/
+void DIO_voidSetPortValue  	    (u8 copy_u8Port , u8 copy_u8value );
+/*************************************************************************************************************/
+/*                                               04- DIO_voidSetPortDirection                                */
+/*-----------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief Function for setting Port value . 
+ * @param  copy_u8Port --> Choosing Port (A,B,C,D) on ATMega32 .
+ * @param  copy_u8Dir  --> Choosing Port direction (OUTPUT, INPUT).
+ * @return void  
+ */
+/*************************************************************************************************************/
+void DIO_voidSetPortDirection  (u8 copy_u8Port , u8 copy_u8Dir );
+/*************************************************************************************************************/
+/*                                               05- DIO_u8GetPinValue                                       */
+/*-----------------------------------------------------------------------------------------------------------*/
+/**
+ * @brief Function for getting pin value . 
+ * @param  copy_u8Port --> Choosing Port (A,B,C,D) on ATMega32 .
+ * @param  copy_u8pin  --> Choosing Pin (0, 1, 2, 3, 4, 5, 6, 7) on ATMega32 .
+ * @return u8  
+ */
+/*************************************************************************************************************/
+u8   DIO_u8GetPinValue          (u8 copy_u8Port ,u8 copy_u8Pin  );
+/*************************************************************************************************************/
+/*                              Public Macros                                                                */
+/*************************************************************************************************************/
+
+/***************************/
+#define		PORTA 		0
+#define		PORTB 		1
+#define		PORTC		2
+#define     PORTD		3
+/**************************/
+#define		PIN0        0
+#define		PIN1        1
+#define		PIN2        2
+#define		PIN3        3
+#define		PIN4        4
+#define		PIN5        5
+#define		PIN6        6
+#define		PIN7        7
+/**************************/
+#define Input_1MA  PIN0
+#define Input_2MA  PIN1
+#define Input_3MB  PIN2
+#define Input_4MB  PIN7
+/*************************/
+#define HIGH 		1
+#define LOW  		0
+#define OUTPUT      1
+#define INPUT       0
+#define PORT_OUT    0xff
+#define PORT_HIGH   0xff
+/*************************/
 
 
-/**********************************************
- * Description : this function is used to set pin value to digital Low/high
- * Scope :public
- * Inputs : u8 ProtId -> index of port number ,Range:[PORTA~POTD]
- *        : u8 PinId  ->Index of pin number in port , Range[PIN0~PIN7]
- *        : u8 Val    ->High/LOW
- * Return :void
- */
-void DIO_vidSetPinVal(u8 PortId , u8 PinId , u8 val);   //vid : return void
-/**********************************************
- * Description : this function is used to set pin direction to digital INPUT/OUTPUT
- * Scope :public
- * Inputs : u8 ProtId -> index of port number ,Range:[PORTA~POTD]
- *        : u8 PinId  ->Index of pin number in port , Range[PIN0~PIN7]
- *        : u8 dir    ->INPUT/OUTPUT
- * Return :void
- */
-void DIO_vidSetPinDir(u8 PortId , u8 PinId , u8 dir);   //vid : return void
-/**********************************************
- * Description : this function is used to set port value to digital HIGH/LOW
- * Scope :public
- * Inputs : u8 ProtId -> index of port number ,Range:[PORTA~POTD]
- *        : u8 Val    ->High/LOW
- * Return :void
- */
-void DIO_vidSetPortVal(u8 PortId , u8 val);   //vid : return void
-/**********************************************
- * Description : this function is used to set port direction to digital INPUT/OUTPUT
- * Scope :public
- * Inputs : u8 ProtId -> index of port number ,Range:[PORTA~POTD]
- *        : u8 dir    ->INPUT/OUTPUT
- * Return :void
- */
-void DIO_vidSetPortDir(u8 PortId , u8 dir);   //vid : return void
-/**********************************************
- * Description : this function is used to get pin value Low/high
- * Scope :public
- * Inputs : u8 ProtId -> index of port number ,Range:[PORTA~POTD]
- *        : u8 PinId  ->Index of pin number in port , Range[PIN0~PIN7]
- * Return : u8  -> the state of pin either low or high
- */
-u8 DIO_u8GetPinVal(u8 PortId , u8 PinId );   //vid : return void
-
-
-/**********************************************/
-/***************public Macros******************/
-/**********************************************/
-
-//port definitions
-#define DIO_PORTA   (0)
-#define DIO_PORTB   (1)
-#define DIO_PORTC   (2)
-#define DIO_PORTD   (3)
-//pins definitions
-#define DIO_PIN0    (0)
-#define DIO_PIN1    (1)
-#define DIO_PIN2    (2)
-#define DIO_PIN3    (3)
-#define DIO_PIN4    (4)
-#define DIO_PIN5    (5)
-#define DIO_PIN6    (6)
-#define DIO_PIN7    (7)
-//digital vals
-#define DIO_HIGH    (1)
-#define DIO_LOW     (0)
-#define DIO_OUTPUT  (1)
-#define DIO_INPUT   (0)
-#define PORT_HIGH	(0XFF)
-#define PORT_OUTPUT	(0XFF)
 
 #endif /* DIO_INTERFACE_H_ */

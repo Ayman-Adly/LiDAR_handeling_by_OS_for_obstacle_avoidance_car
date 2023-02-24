@@ -1,6 +1,24 @@
+/****************************************************************************************
+ * @file Timer1_Priv.h
+ * @author Moamen ehab
+ * @brief timer private files
+ * @version 0.1
+ * @date 2023-02-24
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ ***************************************************************************************/
+
+/****************************************************************************************
+ * @brief Header guards
+ * 
+ ***************************************************************************************/
 #ifndef TIMER1_PRIV_H_
 #define TIMER1_PRIV_H_
-
+/**
+ * @brief private macros
+ * 
+ */
 #define DESABLE (0)
 #define ENABLE (1)
 
@@ -47,18 +65,8 @@
 
 #define TOIE0  (0)
 #define OCIE0  (1)
-
-
-typedef struct
-{
-	volatile u32 CTRL  ;
-	u32 LOAD  ;
-	u32 VAL   ;
-	u32 CALIB ;
-} STK_t ;
-#define STK ((STK_t * )(0xE000E010))
-
-#define		STK_AHB_OVER_8_CLOCK	0
-#define		STK_AHB_CLOCK			1
-
+/**
+ * @brief end of header guards
+ * 
+ */
 #endif /* TIMER0_PRIV_H_ */
